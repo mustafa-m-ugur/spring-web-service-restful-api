@@ -5,6 +5,7 @@ import com.springwebservicerestfulapi.springwebservicerestfulapi.dto.EmployeeDto
 import com.springwebservicerestfulapi.springwebservicerestfulapi.model.Employee;
 import com.springwebservicerestfulapi.springwebservicerestfulapi.repository.EmployeeRepository;
 import com.springwebservicerestfulapi.springwebservicerestfulapi.request.EmployeeRequest;
+import com.springwebservicerestfulapi.springwebservicerestfulapi.request.UserRequest;
 import com.springwebservicerestfulapi.springwebservicerestfulapi.response.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,11 +20,13 @@ public class EmployeeService {
     private final EmployeeRepository employeeRepository;
     private final ServiceResponse serviceResponse;
     private final EmployeeDtoConverter employeeDtoConverter;
+    private final UserService userService;
 
-    public EmployeeService(EmployeeRepository employeeRepository, ServiceResponse serviceResponse, EmployeeDtoConverter employeeDtoConverter) {
+    public EmployeeService(EmployeeRepository employeeRepository, ServiceResponse serviceResponse, EmployeeDtoConverter employeeDtoConverter, UserService userService) {
         this.employeeRepository = employeeRepository;
         this.serviceResponse = serviceResponse;
         this.employeeDtoConverter = employeeDtoConverter;
+        this.userService = userService;
     }
 
     public Object getAllEmployee() {
@@ -72,9 +75,17 @@ public class EmployeeService {
             employee.setEmail(employeeRequest.getEmail());
             employee.setTitle(employeeRequest.getTitle());
             employee.setRoleId(employeeRequest.getRoleId());
-            employee.setAccountId(employee.getAccountId());
+            employee.setAccountId(employeeRequest.getAccountId());
 
             employeeRepository.save(employee);
+
+            UserRequest userRequest = new UserRequest();
+            userRequest.setFirstName(employee.getFirstName());
+            userRequest.setLastName(employee.getLastName());
+            userRequest.setEmail(employee.getEmail());
+            userRequest.setPassword("dasdasd");
+
+            userService.createUser(userRequest);
 
             response = serviceResponse.success("Success", employeeDtoConverter.convert(employee), true);
 
