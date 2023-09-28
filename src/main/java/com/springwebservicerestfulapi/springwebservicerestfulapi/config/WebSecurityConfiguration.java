@@ -48,7 +48,7 @@ public class WebSecurityConfiguration {
 
         http.csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                .requestMatchers("/api/login").permitAll()
+                .requestMatchers("/api/login", "/v2/api-docs").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()

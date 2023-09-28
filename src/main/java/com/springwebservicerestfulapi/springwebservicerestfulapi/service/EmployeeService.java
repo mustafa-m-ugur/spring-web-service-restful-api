@@ -8,6 +8,10 @@ import com.springwebservicerestfulapi.springwebservicerestfulapi.request.Employe
 import com.springwebservicerestfulapi.springwebservicerestfulapi.request.UserRequest;
 import com.springwebservicerestfulapi.springwebservicerestfulapi.response.ServiceResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.data.web.SpringDataWebProperties;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -29,11 +33,17 @@ public class EmployeeService {
         this.userService = userService;
     }
 
+    private Pageable createPageable(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return pageable;
+    }
+
     public Object getAllEmployee() {
         Object response = null;
 
         try {
-            List<Employee> employeeList = employeeRepository.findAll();
+            Pageable pageable = createPageable(1, 1);
+            Page<Employee> employeeList = employeeRepository.findAll(pageable);
             List<EmployeeDto> employeeDtoList = new ArrayList<>();
 
             for (Employee employee : employeeList) {
