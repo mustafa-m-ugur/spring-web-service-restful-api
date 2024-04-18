@@ -1,6 +1,7 @@
 package com.springwebservicerestfulapi.springwebservicerestfulapi.controller;
 
 import com.springwebservicerestfulapi.springwebservicerestfulapi.request.UserRequest;
+import com.springwebservicerestfulapi.springwebservicerestfulapi.response.ServiceResponse;
 import com.springwebservicerestfulapi.springwebservicerestfulapi.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -8,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController extends BaseController {
+public class UserController{
     @Autowired
     private final UserService userService;
 
@@ -17,20 +18,17 @@ public class UserController extends BaseController {
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllUsers() {
-        if (this.checkUserAccess("users_index"))
-            return ResponseEntity.ok(userService.getAllUser());
-        else
-            return ResponseEntity.badRequest().body("You don't have permission to access this page");
+    public ResponseEntity<ServiceResponse> getAllUsers() {
+        return ResponseEntity.ok(userService.getAllUser());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getUserById(Long id) {
+    public ResponseEntity<ServiceResponse> getUserById(Long id) {
         return ResponseEntity.ok(userService.getUserDtoById(id));
     }
 
     @PostMapping
-    public ResponseEntity<Object> createUser(UserRequest userRequest) {
+    public ResponseEntity<Object> createUser(@RequestBody UserRequest userRequest) {
         return ResponseEntity.ok(userService.createUser(userRequest));
     }
 

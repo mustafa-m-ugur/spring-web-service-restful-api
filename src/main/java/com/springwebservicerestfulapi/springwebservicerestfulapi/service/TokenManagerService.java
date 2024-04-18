@@ -1,9 +1,11 @@
 package com.springwebservicerestfulapi.springwebservicerestfulapi.service;
 
+import com.springwebservicerestfulapi.springwebservicerestfulapi.dto.TokenDto;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.Setter;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
@@ -15,13 +17,14 @@ public class TokenManagerService {
     private UserService userService;
     Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
 
+    @Setter
     private String loginToken;
 
     public TokenManagerService(UserService userService) {
         this.userService = userService;
     }
 
-    public String generateToken(String email) {
+    public TokenDto generateToken(String email) {
         String token = io.jsonwebtoken.Jwts.builder()
                 .setSubject(email)
                 .setIssuer("localhost")
@@ -30,7 +33,9 @@ public class TokenManagerService {
                 .signWith(key)
                 .compact();
 
-        return token;
+        TokenDto tokenDto = new TokenDto();
+        tokenDto.setAccess_token(token);
+        return tokenDto;
     }
 
     private Claims getClaims(String token) {
@@ -62,7 +67,4 @@ public class TokenManagerService {
         return loginToken;
     }
 
-    public void setLoginToken(String loginToken) {
-        this.loginToken = loginToken;
-    }
 }

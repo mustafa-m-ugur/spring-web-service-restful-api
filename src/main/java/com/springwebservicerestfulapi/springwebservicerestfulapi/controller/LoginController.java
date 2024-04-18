@@ -1,5 +1,6 @@
 package com.springwebservicerestfulapi.springwebservicerestfulapi.controller;
 
+import com.springwebservicerestfulapi.springwebservicerestfulapi.dto.TokenDto;
 import com.springwebservicerestfulapi.springwebservicerestfulapi.request.LoginRequest;
 import com.springwebservicerestfulapi.springwebservicerestfulapi.service.TokenManagerService;
 import org.json.JSONObject;
@@ -27,20 +28,14 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> login(@RequestBody LoginRequest loginRequest) {
+    public ResponseEntity<TokenDto> login(@RequestBody LoginRequest loginRequest) {
         try {
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
-
-            String token = tokenManagerService.generateToken(loginRequest.getEmail());
-
-            tokenManagerService.setLoginToken(token);
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("access_token", token);
-
-            return ResponseEntity.ok(jsonObject.toString());
+            TokenDto tokenDto = tokenManagerService.generateToken(loginRequest.getEmail());
+            tokenManagerService.setLoginToken(tokenDto.getAccess_token());
+            return ResponseEntity.ok(tokenDto);
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body(e.getMessage());
+            throw new RuntimeException(e.getMessage());
         }
     }
 

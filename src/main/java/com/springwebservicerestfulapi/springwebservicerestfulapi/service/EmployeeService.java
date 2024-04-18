@@ -38,8 +38,8 @@ public class EmployeeService {
         return pageable;
     }
 
-    public Object getAllEmployee() {
-        Object response = null;
+    public ServiceResponse getAllEmployee() {
+        ServiceResponse response = null;
 
         try {
             Pageable pageable = createPageable(1, 1);
@@ -59,8 +59,8 @@ public class EmployeeService {
         return response;
     }
 
-    public Object getEmployeeDtoById(Long id) {
-        Object response = null;
+    public ServiceResponse getEmployeeDtoById(Long id) {
+        ServiceResponse response = null;
 
         try {
             Optional<Employee> employeeOptional = employeeRepository.findById(id);
@@ -75,8 +75,8 @@ public class EmployeeService {
         return response;
     }
 
-    public Object createEmployee(EmployeeRequest employeeRequest) {
-        Object response = null;
+    public ServiceResponse createEmployee(EmployeeRequest employeeRequest) {
+        ServiceResponse response = null;
         try {
 
             Employee employee = new Employee();
@@ -106,8 +106,8 @@ public class EmployeeService {
         return response;
     }
 
-    public Object updateEmployee(Long id, EmployeeRequest employeeRequest) {
-        Object response = null;
+    public ServiceResponse updateEmployee(Long id, EmployeeRequest employeeRequest) {
+        ServiceResponse response = null;
         try {
 
             Optional<Employee> employeeOptional = employeeRepository.findById(id);

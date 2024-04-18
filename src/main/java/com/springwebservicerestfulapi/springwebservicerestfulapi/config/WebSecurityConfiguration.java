@@ -46,9 +46,10 @@ public class WebSecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
+
         http.csrf(csrf -> csrf.disable())
                 .authorizeRequests()
-                .requestMatchers("/api/login", "/v2/api-docs").permitAll()
+                .requestMatchers("/api/login").permitAll()
                 .anyRequest()
                 .authenticated()
                 .and()
